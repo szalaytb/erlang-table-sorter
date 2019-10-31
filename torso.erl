@@ -9,10 +9,17 @@
 %%-include_lib("wx/include/wx.hrl").%%
 
 main(_) ->
-    start(),
+	start(),
 	receive
 		stop -> ok
 	end.
+
+read_function() ->
+	{_, C} = file:consult("C://Users/Public/Documents/content.txt"),
+	[ {Col1line1, Col2line1 }, {Col1line2, Col2line2} ] = C,
+	Msg = "<table style=\"border-collapse: collapse;border:1px solid #69899F;\"><tbody><tr><td>" ++ Col1line1 ++ "</td>" ++ "<td>" ++ Col2line1 ++ "</td></tr>" ++
+		  "<tr><td>" ++ Col1line2 ++ "</td>" ++ "<td>" ++ Col2line2 ++ "</td></tr></tbody></table>",
+	Msg.
 
 run_server() ->
    ok = inets:start(),
@@ -42,10 +49,17 @@ run_server() ->
       {mime_types,[ 
          {"html","text/html"}, {"css","text/css"}, {"js","application/x-javascript"} ]} 
    ]). 
+
+
+
+
          
 service(SessionID, _Env, _Input) -> mod_esi:deliver(SessionID, [ 
-   "Content-Type: text/html\r\n\r\n", "<html><body>Hello, World!</body></html>" ]).
-
+   "Content-Type: text/html\r\n\r\n", "<html><head><style>
+body {background-color: powderblue;}
+table td { border: 1px solid black;}
+</style></head><body>" ++ torso:read_function() ++ "</body></html>"
+   ]).
 start() -> run_server().
 
 %%http://localhost:8081/erl/torso:service
