@@ -17,7 +17,7 @@ main(_) ->
 read_function() ->
 	{_, C} = file:consult("C://Users/Public/Documents/content.txt"),
 	[ {Col1line1, Col2line1 }, {Col1line2, Col2line2} ] = C,
-	Msg = "<table style=\"border-collapse: collapse;border:1px solid #69899F;\"><tbody><tr><td>" ++ Col1line1 ++ "</td>" ++ "<td>" ++ Col2line1 ++ "</td></tr>" ++
+	Msg = "<table><tbody><tr><td>" ++ Col1line1 ++ "</td>" ++ "<td>" ++ Col2line1 ++ "</td></tr>" ++
 		  "<tr><td>" ++ Col1line2 ++ "</td>" ++ "<td>" ++ Col2line2 ++ "</td></tr></tbody></table>",
 	Msg.
 
@@ -58,6 +58,7 @@ service(SessionID, _Env, _Input) -> mod_esi:deliver(SessionID, [
    "Content-Type: text/html\r\n\r\n", "<html><head><style>
 body {background-color: powderblue;}
 table td { border: 1px solid black;}
+table {border-collapse: collapse;border:1px solid #69899F;}
 </style></head><body>" ++ torso:read_function() ++ "</body></html>"
    ]).
 start() -> run_server().
